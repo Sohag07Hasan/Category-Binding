@@ -7,9 +7,7 @@
 		<label for="extra_html"><?php _ex('Html / Javascript code', 'Html block'); ?></label>
 	</th>
 	<td>
-		<textarea name="extra_html" id="extra_html" rows="10" cols="50" style="width: 97%;">
-			<?php echo $term_meta->html_js; // textarea_escaped ?>
-		</textarea>
+		<textarea name="extra_html" id="extra_html" rows="10" cols="50" style="width: 97%;"><?php echo stripslashes($term_meta->html_js); ?></textarea>
 		<br />
 		<span class="description">
 		<?php _e('The html is not prominent by default, however if this field is not empty, this code will be shown to every post of this category.'); ?>
