@@ -4,7 +4,7 @@
 	</th>
 	<td>
 		<textarea name="extra_html" id="extra_html" rows="10" cols="50" style="width: 97%;">
-			<?php echo $extra_html; // textarea_escaped ?>
+			<?php echo $term_meta->html_js; // textarea_escaped ?>
 		</textarea>
 		<br />
 		<span class="description">
@@ -19,9 +19,9 @@
 	</th>
 	<td>
 		<select class="postform" name="html_position">
-			<option <?php selected('1', ''); ?> value="1">Top</option>
-			<option <?php selected('2', ''); ?> value="2">Bottom</option>
-			<option <?php selected('3', ''); ?> value="3">After First Paragraph</option>
+			<option <?php selected('1', $term_meta->position); ?> value="1">Top</option>
+			<option <?php selected('2', $term_meta->position); ?> value="2">Bottom</option>
+			<option <?php selected('3', $term_meta->position); ?> value="3">After First Paragraph</option>
 		</select>
 		<br />
 		<span class="description">
@@ -35,7 +35,7 @@
 		<label for="globally_used"><?php _ex('Globally Used', 'globally used'); ?></label>
 	</th>
 	<td>
-		<input type="checkbox" name="globally_used" value="1" <?php checked('1', $globally_used); ?>  />
+		<input type="checkbox" name="globally_used" value="1" <?php checked($tag->term_id, $global_term); ?>  />
 		<br />
 		<span class="description">
 			<?php _e('Use this to make the html/js global for all the post.'); ?>

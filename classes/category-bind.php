@@ -17,10 +17,29 @@ class Category_Binding_With_Html{
 		register_activation_hook(HTMLBINDINGCATEGORY_FILE, array(get_class(), 'create_the_table'));
 	}
 	
-	static function category_edit_form($tag, $taxonomy){
+	
+	/*
+	 * Extends the category form
+	 * */
+	static function category_edit_form($tag, $taxonomy){		
+		$term_meta = self::get_term_meta($tag->term_id);
+		$global_term = self::get_global_term();		
+		
 		//including the form
 		include dirname(__FILE__) . '/form.php';
 	}
+	 
+	 
+	
+	/*
+	 * get Term meta data from custom table
+	 * */
+	 static function get_term_meta($term_id){
+		$table = self::get_table_name();
+		global $wpdb;
+		return $wpdb->get_row("SELECT * FROM `$table` WHERE `term_id` = '$term_id'");
+	 }
+	 
 	
 	
 	/*
@@ -32,13 +51,13 @@ class Category_Binding_With_Html{
 		$position = (int) $_POST['html_position'];
 		$html = $_POST['extra_html'];
 		
-		self::set_globally($term_id);
+		self::set_global_term($term_id);
 		
 		if(self::term_id_exsits($term_id)){
-			$wpdb->update(array('html_js'=>$html, 'position'=>$position), array('term_id'=>(int)$term_id), array('%s', '%d'), array('%d'));
+			$wpdb->update($table, array('html_js'=>$html, 'position'=>$position), array('term_id'=>(int)$term_id), array('%s', '%d'), array('%d'));
 		}
 		else{
-			$wpdb->insert(array('html_js'=>$html, 'position'=>$position, 'term_id'=>(int)$term_id), array('%s', '%d', '%d'));
+			$wpdb->insert($table, array('html_js'=>$html, 'position'=>$position, 'term_id'=>(int)$term_id), array('%s', '%d', '%d'));
 		}
 		
 		return;
@@ -48,12 +67,21 @@ class Category_Binding_With_Html{
 	/*
 	 * Globally set the category for the html
 	 * */
-	 static function set_globally($term_id){
-		if(isset([$_POST['globally_used']) && !empty($_POST['globally_used'])) :
+	 static function set_global_term($term_id){
+		 
+		if($_POST['globally_used'] == '1') :
 			update_option('global_category_binding', $term_id);
 		endif;
+		
 	 }
 	 
+	 
+	 /*
+	 *get the global term 
+	 * */
+	 static function get_global_term(){
+		return get_option('global_category_binding', false);
+	 }
 	
 	
 	/*
@@ -85,6 +113,7 @@ class Category_Binding_With_Html{
 		global $wpdb;
 		return $wpdb->prefix . 'category_binding'; 
 	  }
+	  
 	  
 	  
 	  /*
