@@ -1,3 +1,7 @@
+<!-- ajax checker -->
+<input type="hidden" name="ajax_enalbed" value='n' />
+
+
 <tr class="form-field">
 	<th scope="row" valign="top">
 		<label for="extra_html"><?php _ex('Html / Javascript code', 'Html block'); ?></label>

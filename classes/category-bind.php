@@ -15,7 +15,23 @@ class Category_Binding_With_Html{
 		
 		//creating table to store the data
 		register_activation_hook(HTMLBINDINGCATEGORY_FILE, array(get_class(), 'create_the_table'));
+		
+		//adding custom column with the category table
+		//add_filter('manage_category__custom_column', array(get_class(), 'add_custom_column'), 10, 3);
+		
+		//category delte hook
+		add_action('delete_category', array(get_class(), 'delete_category'), 10, 2);
 	}
+	
+	/*
+	 * Deletes form the custom tale
+	 * */
+	 static function delete_category($term, $tt_id){
+		 $table = self::get_table_name();
+		 global $wpdb;
+		 $wpdb->query("DELETE FROM `$table` WHERE `term_id` = '$term'");
+		 return;
+	 }
 	
 	
 	/*
@@ -46,6 +62,9 @@ class Category_Binding_With_Html{
 	 * Save the extra field values
 	 * */
 	static function save_category_data($term_id, $tt_id){
+		//skip for the ajax
+		if(self::ajax_enabled()) return ;						
+				
 		global $wpdb;
 		$table = self::get_table_name();
 		$position = (int) $_POST['html_position'];
@@ -62,6 +81,15 @@ class Category_Binding_With_Html{
 		
 		return;
 	}
+	
+	
+	/*
+	 * if ajax action is occured simply return true
+	 * */
+	 static function ajax_enabled(){		 		 
+		return (isset($_POST['ajax_enalbed']) &&  $_POST['ajax_enalbed'] == 'n') ? false : true; 
+	 }
+	 
 	
 	
 	/*
